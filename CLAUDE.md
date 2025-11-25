@@ -75,6 +75,7 @@ src/index.ts:
 | `gemini_messages` | Multi-turn conversations |
 | `gemini_search` | Web search + grounding |
 | `gemini_youtube` | YouTube video analysis |
+| `gemini_status` | Server status and config check |
 
 **Default Model:** `gemini-3-pro-preview` (configurable via `GEMINI_MODEL` env var)
 

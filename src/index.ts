@@ -26,6 +26,7 @@ const SERVER_VERSION = "1.0.0";
 const FALLBACK_MODEL = "gemini-3-pro-preview";
 const CONFIGURED_MODEL = process.env.GEMINI_MODEL;
 let ACTIVE_MODEL = CONFIGURED_MODEL || FALLBACK_MODEL;
+let MODEL_FALLBACK_USED = false;
 
 // Maximum response size to prevent overwhelming output
 const CHARACTER_LIMIT = 50000;
@@ -85,6 +86,7 @@ async function validateConfiguredModel(): Promise<void> {
         `Falling back to: ${FALLBACK_MODEL}`
       );
       ACTIVE_MODEL = FALLBACK_MODEL;
+      MODEL_FALLBACK_USED = true;
     }
   } catch (error) {
     // API error - can't validate, use configured model with warning
@@ -620,6 +622,79 @@ Limitations:
         isError: true,
       };
     }
+  }
+);
+
+// =============================================================================
+// Tool: gemini_status
+// =============================================================================
+
+const StatusInputSchema = z.object({}).strict();
+
+server.registerTool(
+  "gemini_status",
+  {
+    title: "Gemini Server Status",
+    description: `Check Gemini MCP server status and configuration.
+
+Returns information about the server's current state, including which model
+is active and whether a fallback occurred due to invalid configuration.
+
+Use this tool to:
+- Verify which Gemini model is being used
+- Check if your GEMINI_MODEL configuration is valid
+- Debug configuration issues
+
+Args:
+  None required.
+
+Returns:
+  Server status including:
+  - active_model: Currently used model
+  - configured_model: Model from GEMINI_MODEL env var (if set)
+  - fallback_model: Default fallback model
+  - fallback_used: Whether fallback was triggered
+  - server_version: Server version
+  - api_key_configured: Whether GOOGLE_API_KEY is set`,
+    inputSchema: StatusInputSchema,
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+      openWorldHint: false,
+    },
+  },
+  async () => {
+    const status = {
+      active_model: ACTIVE_MODEL,
+      configured_model: CONFIGURED_MODEL || null,
+      fallback_model: FALLBACK_MODEL,
+      fallback_used: MODEL_FALLBACK_USED,
+      server_version: SERVER_VERSION,
+      api_key_configured: !!process.env.GOOGLE_API_KEY,
+    };
+
+    let statusText = `**Gemini MCP Server Status**\n\n`;
+    statusText += `- **Active Model:** ${status.active_model}\n`;
+
+    if (status.configured_model) {
+      statusText += `- **Configured Model:** ${status.configured_model}`;
+      if (status.fallback_used) {
+        statusText += ` ⚠️ (not found, using fallback)\n`;
+      } else {
+        statusText += ` ✓\n`;
+      }
+    } else {
+      statusText += `- **Configured Model:** (not set, using default)\n`;
+    }
+
+    statusText += `- **Fallback Model:** ${status.fallback_model}\n`;
+    statusText += `- **Server Version:** ${status.server_version}\n`;
+    statusText += `- **API Key:** ${status.api_key_configured ? "configured ✓" : "missing ⚠️"}\n`;
+
+    return {
+      content: [{ type: "text", text: statusText }],
+    };
   }
 );
 

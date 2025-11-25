@@ -23,6 +23,7 @@ While Claude excels at many tasks, Gemini offers unique capabilities:
 | `gemini_messages` | Multi-turn structured conversations |
 | `gemini_search` | Web search with Google Search grounding and citations |
 | `gemini_youtube` | YouTube video analysis (transcription, Q&A, summarization) |
+| `gemini_status` | Server status and configuration check |
 
 **Default Model:** `gemini-3-pro-preview` (configurable via `GEMINI_MODEL` env var)
 
@@ -204,6 +205,22 @@ Analyze YouTube videos.
 
 Supports both full URLs (`youtube.com/watch?v=...`) and short URLs (`youtu.be/...`).
 
+### gemini_status
+
+Check server status and configuration.
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| (none) | - | - | No parameters required |
+
+Returns:
+- `active_model` - Currently used model
+- `configured_model` - Model from GEMINI_MODEL env var (if set)
+- `fallback_model` - Default fallback model
+- `fallback_used` - Whether fallback was triggered due to invalid model
+- `server_version` - Server version
+- `api_key_configured` - Whether GOOGLE_API_KEY is set
+
 ## Development
 
 ```bash
@@ -242,6 +259,13 @@ The free tier has usage limits. Wait a few minutes and try again, or upgrade you
 - Only public videos are supported (no private or unlisted)
 - Video must be available in your region
 - Very long videos may hit token limits (use `start_offset`/`end_offset`)
+
+### Model validation and fallback
+If you configure an invalid model via `GEMINI_MODEL`, the server automatically falls back to `gemini-3-pro-preview`. The warning is logged to stderr but may not be visible in Claude Code.
+
+To check your current configuration status:
+1. Use the `gemini_status` tool - it shows active model and whether fallback occurred
+2. Run Claude Code with `--verbose` flag to see MCP server logs
 
 ## Project Structure
 
