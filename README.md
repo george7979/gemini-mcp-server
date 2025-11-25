@@ -76,7 +76,8 @@ Add to your Claude Code MCP settings file (`~/.claude.json`)
       "command": "node",
       "args": ["/absolute/path/to/gemini-mcp-server/dist/index.js"],
       "env": {
-        "GOOGLE_API_KEY": "your-api-key-here"
+        "GOOGLE_API_KEY": "your-api-key-here",
+        "GEMINI_MODEL": "gemini-3-pro-preview"  // optional - validated at startup
       }
     }
   }
@@ -95,7 +96,8 @@ Add to `.vscode/mcp.json`
       "command": "node",
       "args": ["${workspaceFolder}/path/to/gemini-mcp-server/dist/index.js"],
       "env": {
-        "GOOGLE_API_KEY": "your-api-key-here"
+        "GOOGLE_API_KEY": "your-api-key-here",
+        "GEMINI_MODEL": "gemini-3-pro-preview"  // optional - validated at startup
       }
     }
   }

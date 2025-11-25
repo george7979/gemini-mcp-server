@@ -55,15 +55,16 @@ server.registerTool(
 ### Code Structure
 ```
 src/index.ts:
-├── Constants (SERVER_NAME, DEFAULT_MODEL, etc.)
-├── Environment validation
+├── Constants (SERVER_NAME, FALLBACK_MODEL, CONFIGURED_MODEL, ACTIVE_MODEL)
+├── Environment validation (GOOGLE_API_KEY)
 ├── Gemini client initialization
+├── Model validation (validateConfiguredModel)
 ├── Shared types & utilities (buildGenerationConfig, handleGeminiError)
 ├── Tool: gemini_generate
 ├── Tool: gemini_messages
 ├── Tool: gemini_search
 ├── Tool: gemini_youtube
-└── Server startup
+└── Server startup (validates model, then connects)
 ```
 
 ## Tools Implemented
@@ -95,7 +96,14 @@ src/index.ts:
 Edit `handleGeminiError()` function - maps API errors to actionable user messages.
 
 ### Changing Default Model
-Set `GEMINI_MODEL` environment variable or update `DEFAULT_MODEL` constant in `src/index.ts`.
+Set `GEMINI_MODEL` environment variable in your MCP client config (e.g., `.claude.json`).
+
+**Model Validation:** At startup, the server validates the configured model via `models.list()` API:
+- If `GEMINI_MODEL` not set → uses default `gemini-3-pro-preview` (no validation)
+- If model exists → uses it silently
+- If model doesn't exist → warning to stderr + fallback to `gemini-3-pro-preview`
+
+**Fallback model:** Hardcoded in `FALLBACK_MODEL` constant in `src/index.ts`.
 
 ## Documentation
 

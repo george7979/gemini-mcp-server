@@ -48,7 +48,7 @@ Simple text generation with a single prompt.
 ```typescript
 Input: {
   input: string;           // Required: prompt text
-  model?: string;          // Default: "gemini-2.0-flash-exp"
+  model?: string;          // Default: GEMINI_MODEL env or "gemini-3-pro-preview"
   temperature?: number;    // 0-2, controls randomness
   max_tokens?: number;     // Maximum output tokens
   top_p?: number;          // 0-1, nucleus sampling
@@ -69,7 +69,7 @@ Input: {
     role: "user" | "model";
     content: string;
   }>;
-  model?: string;          // Default: "gemini-2.0-flash-exp"
+  model?: string;          // Default: GEMINI_MODEL env or "gemini-3-pro-preview"
   temperature?: number;
   max_tokens?: number;
   top_p?: number;
@@ -87,7 +87,7 @@ Web search with Google Search grounding.
 ```typescript
 Input: {
   input: string;           // Search query
-  model?: string;          // Default: "gemini-2.5-flash"
+  model?: string;          // Default: GEMINI_MODEL env or "gemini-3-pro-preview"
   temperature?: number;
   max_tokens?: number;
   top_p?: number;
@@ -109,7 +109,7 @@ YouTube video analysis (transcription, summarization, Q&A).
 Input: {
   youtube_url: string;     // YouTube video URL
   prompt: string;          // Question/task about video
-  model?: string;          // Default: "gemini-2.5-flash"
+  model?: string;          // Default: GEMINI_MODEL env or "gemini-3-pro-preview"
   start_offset?: string;   // e.g., "60s", "1m30s"
   end_offset?: string;     // e.g., "120s", "2m"
   temperature?: number;
@@ -130,6 +130,7 @@ Output: {
 | Variable | Required | Description |
 |----------|----------|-------------|
 | GOOGLE_API_KEY | Yes | Google AI API key from [AI Studio](https://aistudio.google.com/apikey) |
+| GEMINI_MODEL | No | Custom Gemini model (default: `gemini-3-pro-preview`). Validated at startup via API. |
 
 ### Claude Code Configuration
 Add to your MCP settings file:
@@ -142,7 +143,8 @@ Add to your MCP settings file:
       "command": "node",
       "args": ["/path/to/gemini-mcp-server/dist/index.js"],
       "env": {
-        "GOOGLE_API_KEY": "your-api-key-here"
+        "GOOGLE_API_KEY": "your-api-key-here",
+        "GEMINI_MODEL": "gemini-3-pro-preview"  // optional
       }
     }
   }
@@ -243,7 +245,8 @@ function buildGenerationConfig(params: {
 
 ### Google Gemini API
 - **SDK:** `@google/genai` (official Google AI SDK)
-- **Models:** gemini-2.0-flash-exp (fast), gemini-2.5-flash (search/video)
+- **Default Model:** `gemini-3-pro-preview` (configurable via `GEMINI_MODEL` env var)
+- **Model Validation:** At startup, validates configured model exists via `models.list()` API
 - **Features:** Text generation, multi-modal, web grounding, video analysis
 - **Docs:** https://ai.google.dev/gemini-api/docs
 

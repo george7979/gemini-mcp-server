@@ -22,7 +22,10 @@ import { z } from "zod";
 const SERVER_NAME = "gemini-mcp-server";
 const SERVER_VERSION = "1.0.0";
 
-const DEFAULT_MODEL = process.env.GEMINI_MODEL || "gemini-3-pro-preview";
+// Model configuration
+const FALLBACK_MODEL = "gemini-3-pro-preview";
+const CONFIGURED_MODEL = process.env.GEMINI_MODEL;
+let ACTIVE_MODEL = CONFIGURED_MODEL || FALLBACK_MODEL;
 
 // Maximum response size to prevent overwhelming output
 const CHARACTER_LIMIT = 50000;
@@ -45,6 +48,53 @@ if (!apiKey) {
 // =============================================================================
 
 const genAI = new GoogleGenAI({ apiKey });
+
+// =============================================================================
+// Model Validation
+// =============================================================================
+
+/**
+ * Validate configured model exists in Gemini API.
+ * Only validates if GEMINI_MODEL env var is explicitly set.
+ * Falls back to FALLBACK_MODEL if validation fails.
+ */
+async function validateConfiguredModel(): Promise<void> {
+  // No custom model configured - use default without validation
+  if (!CONFIGURED_MODEL) {
+    return;
+  }
+
+  try {
+    const models = await genAI.models.list();
+    const modelNames: string[] = [];
+
+    for await (const model of models) {
+      if (model.name) modelNames.push(model.name);
+    }
+
+    // Check if model exists (with or without "models/" prefix)
+    const modelExists = modelNames.some(name =>
+      name === CONFIGURED_MODEL ||
+      name === `models/${CONFIGURED_MODEL}` ||
+      name.endsWith(`/${CONFIGURED_MODEL}`)
+    );
+
+    if (!modelExists) {
+      console.error(
+        `Warning: Model "${CONFIGURED_MODEL}" not found in available models. ` +
+        `Falling back to: ${FALLBACK_MODEL}`
+      );
+      ACTIVE_MODEL = FALLBACK_MODEL;
+    }
+  } catch (error) {
+    // API error - can't validate, use configured model with warning
+    console.error(
+      `Warning: Could not validate model "${CONFIGURED_MODEL}". ` +
+      `API error: ${error instanceof Error ? error.message : String(error)}. ` +
+      `Using configured model anyway.`
+    );
+  }
+}
 
 // =============================================================================
 // Shared Types & Utilities
@@ -125,8 +175,8 @@ const GenerateInputSchema = z.object({
     .min(1, "Input prompt is required")
     .describe("The input text or prompt for Gemini"),
   model: z.string()
-    .default(DEFAULT_MODEL)
-    .describe("Gemini model variant to use"),
+    .optional()
+    .describe("Gemini model variant to use (defaults to GEMINI_MODEL env or gemini-3-pro-preview)"),
   temperature: z.number()
     .min(0)
     .max(2)
@@ -161,7 +211,7 @@ analysis, and general AI assistance tasks.
 
 Args:
   - input (string, required): The prompt or question for Gemini
-  - model (string, optional): Model to use (default: "${DEFAULT_MODEL}")
+  - model (string, optional): Model to use (defaults to GEMINI_MODEL env or gemini-3-pro-preview)
   - temperature (number, optional): Randomness 0-2 (higher = more creative)
   - max_tokens (number, optional): Maximum output length
   - top_p (number, optional): Nucleus sampling threshold 0-1
@@ -189,7 +239,7 @@ Note: Each call may produce different results due to model randomness.`,
       const config = buildGenerationConfig(params);
 
       const response = await genAI.models.generateContent({
-        model: params.model ?? DEFAULT_MODEL,
+        model: params.model ?? ACTIVE_MODEL,
         contents: params.input,
         config,
       });
@@ -225,8 +275,8 @@ const MessagesInputSchema = z.object({
     .min(1, "At least one message is required")
     .describe("Array of conversation messages"),
   model: z.string()
-    .default(DEFAULT_MODEL)
-    .describe("Gemini model variant to use"),
+    .optional()
+    .describe("Gemini model variant to use (defaults to GEMINI_MODEL env or gemini-3-pro-preview)"),
   temperature: z.number()
     .min(0)
     .max(2)
@@ -263,7 +313,7 @@ Args:
   - messages (array, required): Conversation history
     - role: "user" (human) or "model" (AI response)
     - content: The message text
-  - model (string, optional): Model to use (default: "${DEFAULT_MODEL}")
+  - model (string, optional): Model to use (defaults to GEMINI_MODEL env or gemini-3-pro-preview)
   - temperature (number, optional): Randomness 0-2
   - max_tokens (number, optional): Maximum output length
   - top_p (number, optional): Nucleus sampling threshold 0-1
@@ -299,7 +349,7 @@ Note: Messages should alternate between user and model roles.`,
       }));
 
       const response = await genAI.models.generateContent({
-        model: params.model ?? DEFAULT_MODEL,
+        model: params.model ?? ACTIVE_MODEL,
         contents,
         config,
       });
@@ -327,8 +377,8 @@ const SearchInputSchema = z.object({
     .min(1, "Search query is required")
     .describe("The search query or question"),
   model: z.string()
-    .default(DEFAULT_MODEL)
-    .describe("Gemini model variant to use"),
+    .optional()
+    .describe("Gemini model variant to use (defaults to GEMINI_MODEL env or gemini-3-pro-preview)"),
   temperature: z.number()
     .min(0)
     .max(2)
@@ -363,7 +413,7 @@ includes the AI-generated answer plus search queries and source URLs.
 
 Args:
   - input (string, required): The search query or question
-  - model (string, optional): Model to use (default: "${DEFAULT_MODEL}")
+  - model (string, optional): Model to use (defaults to GEMINI_MODEL env or gemini-3-pro-preview)
   - temperature (number, optional): Randomness 0-2
   - max_tokens (number, optional): Maximum output length
   - top_p (number, optional): Nucleus sampling threshold 0-1
@@ -398,7 +448,7 @@ Note: Results reflect real-time web data and include source citations.`,
       };
 
       const response = await genAI.models.generateContent({
-        model: params.model ?? DEFAULT_MODEL,
+        model: params.model ?? ACTIVE_MODEL,
         contents: params.input,
         config,
       });
@@ -451,8 +501,8 @@ const YouTubeInputSchema = z.object({
     .min(1, "Prompt is required")
     .describe("Question or task about the video"),
   model: z.string()
-    .default(DEFAULT_MODEL)
-    .describe("Gemini model variant to use"),
+    .optional()
+    .describe("Gemini model variant to use (defaults to GEMINI_MODEL env or gemini-3-pro-preview)"),
   start_offset: z.string()
     .optional()
     .describe("Start time offset (e.g., '60s' for 1 minute)"),
@@ -486,7 +536,7 @@ Args:
     - Standard: https://www.youtube.com/watch?v=VIDEO_ID
     - Short: https://youtu.be/VIDEO_ID
   - prompt (string, required): What to do with the video
-  - model (string, optional): Model to use (default: "${DEFAULT_MODEL}")
+  - model (string, optional): Model to use (defaults to GEMINI_MODEL env or gemini-3-pro-preview)
   - start_offset (string, optional): Start time, e.g., "60s", "1m30s"
   - end_offset (string, optional): End time, e.g., "120s", "2m"
   - temperature (number, optional): Randomness 0-2
@@ -546,7 +596,7 @@ Limitations:
       const parts = [videoPart, { text: params.prompt }];
 
       const response = await genAI.models.generateContent({
-        model: params.model ?? DEFAULT_MODEL,
+        model: params.model ?? ACTIVE_MODEL,
         contents: parts as Parameters<typeof genAI.models.generateContent>[0]["contents"],
         config,
       });
@@ -578,9 +628,12 @@ Limitations:
 // =============================================================================
 
 async function main(): Promise<void> {
+  // Validate configured model before starting server
+  await validateConfiguredModel();
+
   const transport = new StdioServerTransport();
   await server.connect(transport);
-  console.error(`${SERVER_NAME} v${SERVER_VERSION} running on stdio`);
+  console.error(`${SERVER_NAME} v${SERVER_VERSION} running on stdio (model: ${ACTIVE_MODEL})`);
 }
 
 main().catch((error) => {
