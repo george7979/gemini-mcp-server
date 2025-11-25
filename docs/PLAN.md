@@ -85,3 +85,6 @@ AI text generation is inherently non-deterministic. The same prompt produces dif
 
 ---
 *Last Updated: 2025-11-25*
+
+---
+> 📋 This document was created following the [Context Keeper Method](https://github.com/george7979/context-keeper-method) - a structured approach to AI-friendly project documentation.
