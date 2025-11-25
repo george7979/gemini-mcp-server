@@ -4,7 +4,7 @@ This file provides context for Claude Code when working with this project.
 
 ## Project Overview
 
-**gemini-mcp-server** is an MCP (Model Context Protocol) server that provides Google Gemini AI capabilities to Claude Code. It implements 4 tools: text generation, multi-turn conversations, web search with grounding, and YouTube video analysis.
+**gemini-mcp-server** is an MCP (Model Context Protocol) server that provides Google Gemini AI capabilities to Claude Code. It implements 5 tools: text generation, multi-turn conversations, web search with grounding, YouTube video analysis, and server status check.
 
 ## Quick Reference
 
@@ -27,8 +27,8 @@ Requires `GOOGLE_API_KEY` environment variable. Get a key at: https://aistudio.g
 ## Architecture
 
 ### Single-File Design
-All server code is in `src/index.ts` (~600 LOC). This is intentional:
-- Simple project (4 tools)
+All server code is in `src/index.ts` (~700 LOC). This is intentional:
+- Simple project (5 tools)
 - Easy to understand and modify
 - No complex module dependencies
 
@@ -55,7 +55,7 @@ server.registerTool(
 ### Code Structure
 ```
 src/index.ts:
-├── Constants (SERVER_NAME, FALLBACK_MODEL, CONFIGURED_MODEL, ACTIVE_MODEL)
+├── Constants (SERVER_NAME, FALLBACK_MODEL, CONFIGURED_MODEL, ACTIVE_MODEL, MODEL_FALLBACK_USED)
 ├── Environment validation (GOOGLE_API_KEY)
 ├── Gemini client initialization
 ├── Model validation (validateConfiguredModel)
@@ -64,6 +64,7 @@ src/index.ts:
 ├── Tool: gemini_messages
 ├── Tool: gemini_search
 ├── Tool: gemini_youtube
+├── Tool: gemini_status
 └── Server startup (validates model, then connects)
 ```
 
@@ -105,6 +106,8 @@ Set `GEMINI_MODEL` environment variable in your MCP client config (e.g., `.claud
 - If model doesn't exist → warning to stderr + fallback to `gemini-3-pro-preview`
 
 **Fallback model:** Hardcoded in `FALLBACK_MODEL` constant in `src/index.ts`.
+
+**Checking status:** Use `gemini_status` tool to see active model, fallback status, and configuration.
 
 ## Documentation
 

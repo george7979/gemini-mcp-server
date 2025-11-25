@@ -124,6 +124,31 @@ Output: {
 }
 ```
 
+#### gemini_status
+Server status and configuration check.
+
+```typescript
+Input: {}  // No parameters required
+
+Output: {
+  content: [{
+    type: "text",
+    text: string  // Formatted status with:
+                  // - active_model: Currently used model
+                  // - configured_model: From GEMINI_MODEL env (or null)
+                  // - fallback_model: Default fallback model
+                  // - fallback_used: Whether fallback was triggered
+                  // - server_version: Server version
+                  // - api_key_configured: Whether GOOGLE_API_KEY is set
+  }]
+}
+```
+
+Use this tool to:
+- Verify which Gemini model is being used
+- Check if GEMINI_MODEL configuration is valid
+- Debug configuration issues when model fallback occurs
+
 ## Configuration
 
 ### Environment Variables

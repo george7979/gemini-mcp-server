@@ -116,6 +116,7 @@ gemini_generate - Generate text using Google Gemini AI
 gemini_messages - Multi-turn conversation with Gemini
 gemini_search   - Web search with Google Search grounding
 gemini_youtube  - Analyze YouTube videos
+gemini_status   - Check server status and configuration
 ```
 
 ## Usage Examples

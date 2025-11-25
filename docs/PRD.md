@@ -29,6 +29,7 @@ Existing solutions are either outdated, poorly documented, or not compliant with
 | `gemini_messages` | Structured multi-turn conversations | ✅ Complete |
 | `gemini_search` | Web search with Google Search grounding | ✅ Complete |
 | `gemini_youtube` | YouTube video analysis (transcribe, summarize, Q&A) | ✅ Complete |
+| `gemini_status` | Server status and configuration check | ✅ Complete |
 
 ### Technical Requirements
 - TypeScript with strict mode

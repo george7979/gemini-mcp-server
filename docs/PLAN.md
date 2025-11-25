@@ -45,6 +45,11 @@ The server has been fully refactored to modern MCP SDK patterns:
 - [x] Make repository public
 - [ ] Manual testing of each tool in Claude Code (optional)
 
+### Phase 6: Status Tool Enhancement ✅
+- [x] `gemini_status` - Server status and configuration check
+- [x] `MODEL_FALLBACK_USED` flag to track fallback state
+- [x] Documentation updates (README, CLAUDE.md, PRD, TECH)
+
 ## Technical Decisions
 
 ### Why `registerTool()` over `setRequestHandler`?
