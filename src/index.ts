@@ -22,8 +22,7 @@ import { z } from "zod";
 const SERVER_NAME = "gemini-mcp-server";
 const SERVER_VERSION = "1.0.0";
 
-const DEFAULT_MODEL = "gemini-2.0-flash-exp";
-const SEARCH_MODEL = "gemini-2.5-flash";
+const DEFAULT_MODEL = process.env.GEMINI_MODEL || "gemini-3-pro-preview";
 
 // Maximum response size to prevent overwhelming output
 const CHARACTER_LIMIT = 50000;
@@ -328,7 +327,7 @@ const SearchInputSchema = z.object({
     .min(1, "Search query is required")
     .describe("The search query or question"),
   model: z.string()
-    .default(SEARCH_MODEL)
+    .default(DEFAULT_MODEL)
     .describe("Gemini model variant to use"),
   temperature: z.number()
     .min(0)
@@ -364,7 +363,7 @@ includes the AI-generated answer plus search queries and source URLs.
 
 Args:
   - input (string, required): The search query or question
-  - model (string, optional): Model to use (default: "${SEARCH_MODEL}")
+  - model (string, optional): Model to use (default: "${DEFAULT_MODEL}")
   - temperature (number, optional): Randomness 0-2
   - max_tokens (number, optional): Maximum output length
   - top_p (number, optional): Nucleus sampling threshold 0-1
@@ -399,7 +398,7 @@ Note: Results reflect real-time web data and include source citations.`,
       };
 
       const response = await genAI.models.generateContent({
-        model: params.model ?? SEARCH_MODEL,
+        model: params.model ?? DEFAULT_MODEL,
         contents: params.input,
         config,
       });
@@ -452,7 +451,7 @@ const YouTubeInputSchema = z.object({
     .min(1, "Prompt is required")
     .describe("Question or task about the video"),
   model: z.string()
-    .default(SEARCH_MODEL)
+    .default(DEFAULT_MODEL)
     .describe("Gemini model variant to use"),
   start_offset: z.string()
     .optional()
@@ -487,7 +486,7 @@ Args:
     - Standard: https://www.youtube.com/watch?v=VIDEO_ID
     - Short: https://youtu.be/VIDEO_ID
   - prompt (string, required): What to do with the video
-  - model (string, optional): Model to use (default: "${SEARCH_MODEL}")
+  - model (string, optional): Model to use (default: "${DEFAULT_MODEL}")
   - start_offset (string, optional): Start time, e.g., "60s", "1m30s"
   - end_offset (string, optional): End time, e.g., "120s", "2m"
   - temperature (number, optional): Randomness 0-2
@@ -547,7 +546,7 @@ Limitations:
       const parts = [videoPart, { text: params.prompt }];
 
       const response = await genAI.models.generateContent({
-        model: params.model ?? SEARCH_MODEL,
+        model: params.model ?? DEFAULT_MODEL,
         contents: parts as Parameters<typeof genAI.models.generateContent>[0]["contents"],
         config,
       });

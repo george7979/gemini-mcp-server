@@ -24,6 +24,8 @@ While Claude excels at many tasks, Gemini offers unique capabilities:
 | `gemini_search` | Web search with Google Search grounding and citations |
 | `gemini_youtube` | YouTube video analysis (transcription, Q&A, summarization) |
 
+**Default Model:** `gemini-3-pro-preview` (configurable via `GEMINI_MODEL` env var)
+
 ## Quick Start
 
 ### Prerequisites
@@ -146,7 +148,7 @@ Generate text from a single prompt.
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `input` | string | Yes | The prompt or question |
-| `model` | string | No | Model to use (default: `gemini-2.0-flash-exp`) |
+| `model` | string | No | Model to use (default: `gemini-3-pro-preview`) |
 | `temperature` | number | No | Randomness 0-2 (default: 1) |
 | `max_tokens` | number | No | Maximum output length |
 | `top_p` | number | No | Nucleus sampling 0-1 |
@@ -159,7 +161,7 @@ Multi-turn conversation with message history.
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `messages` | array | Yes | Array of `{role, content}` objects |
-| `model` | string | No | Model to use (default: `gemini-2.0-flash-exp`) |
+| `model` | string | No | Model to use (default: `gemini-3-pro-preview`) |
 | `temperature` | number | No | Randomness 0-2 |
 | `max_tokens` | number | No | Maximum output length |
 
@@ -178,7 +180,7 @@ Web search with Google Search grounding.
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `input` | string | Yes | Search query |
-| `model` | string | No | Model to use (default: `gemini-2.5-flash`) |
+| `model` | string | No | Model to use (default: `gemini-3-pro-preview`) |
 | `temperature` | number | No | Randomness 0-2 |
 | `max_tokens` | number | No | Maximum output length |
 
@@ -192,7 +194,7 @@ Analyze YouTube videos.
 |-----------|------|----------|-------------|
 | `youtube_url` | string | Yes | YouTube video URL |
 | `prompt` | string | Yes | Question or task about the video |
-| `model` | string | No | Model to use (default: `gemini-2.5-flash`) |
+| `model` | string | No | Model to use (default: `gemini-3-pro-preview`) |
 | `start_offset` | string | No | Start time (e.g., "60s", "1m30s") |
 | `end_offset` | string | No | End time (e.g., "120s", "2m") |
 | `temperature` | number | No | Randomness 0-2 |

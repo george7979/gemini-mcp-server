@@ -68,12 +68,14 @@ src/index.ts:
 
 ## Tools Implemented
 
-| Tool | Purpose | Default Model |
-|------|---------|---------------|
-| `gemini_generate` | Simple text generation | `gemini-2.0-flash-exp` |
-| `gemini_messages` | Multi-turn conversations | `gemini-2.0-flash-exp` |
-| `gemini_search` | Web search + grounding | `gemini-2.5-flash` |
-| `gemini_youtube` | YouTube video analysis | `gemini-2.5-flash` |
+| Tool | Purpose |
+|------|---------|
+| `gemini_generate` | Simple text generation |
+| `gemini_messages` | Multi-turn conversations |
+| `gemini_search` | Web search + grounding |
+| `gemini_youtube` | YouTube video analysis |
+
+**Default Model:** `gemini-3-pro-preview` (configurable via `GEMINI_MODEL` env var)
 
 ## Dependencies
 
@@ -92,8 +94,8 @@ src/index.ts:
 ### Modifying Error Handling
 Edit `handleGeminiError()` function - maps API errors to actionable user messages.
 
-### Changing Default Models
-Update constants at the top of `src/index.ts`: `DEFAULT_MODEL`, `SEARCH_MODEL`.
+### Changing Default Model
+Set `GEMINI_MODEL` environment variable or update `DEFAULT_MODEL` constant in `src/index.ts`.
 
 ## Documentation
 
