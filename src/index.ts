@@ -25,6 +25,9 @@ const SERVER_VERSION = "1.0.0";
 const DEFAULT_MODEL = "gemini-2.0-flash-exp";
 const SEARCH_MODEL = "gemini-2.5-flash";
 
+// Maximum response size to prevent overwhelming output
+const CHARACTER_LIMIT = 50000;
+
 // =============================================================================
 // Environment Validation
 // =============================================================================

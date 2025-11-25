@@ -1,22 +1,33 @@
 {
   "name": "gemini-mcp-server",
-  "version": "0.3.0",
-  "description": "MCP server for Google Gemini AI models",
+  "version": "1.0.0",
+  "description": "MCP server for Google Gemini AI - text generation, web search, YouTube analysis",
   "type": "module",
   "main": "dist/index.js",
+  "bin": {
+    "gemini-mcp-server": "dist/index.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
     "start": "node dist/index.js",
     "dev": "tsx watch src/index.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
   },
   "keywords": [
     "mcp",
     "gemini",
     "ai",
     "google",
-    "claude-code"
+    "claude-code",
+    "model-context-protocol",
+    "llm"
   ],
-  "author": "",
+  "author": "george7979",
   "license": "MIT",
   "repository": {
     "type": "git",
