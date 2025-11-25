@@ -47,9 +47,24 @@ npm run build
 
 ### Configuration
 
-Add to your Claude Code MCP settings:
+#### Option 1: Quick Install (Recommended)
 
-**Option 1: Claude Code CLI** (`~/.claude.json` or `~/.config/claude-code/settings.json`)
+Use Claude Code's built-in command:
+
+```bash
+claude mcp add gemini-mcp-server node /absolute/path/to/gemini-mcp-server/dist/index.js -e GOOGLE_API_KEY=your-api-key-here
+```
+
+> **Tip:** Run `pwd` in the gemini-mcp-server directory to get the absolute path.
+
+To install globally (available in all projects):
+```bash
+claude mcp add gemini-mcp-server node /path/to/dist/index.js -e GOOGLE_API_KEY=your-key --scope user
+```
+
+#### Option 2: Manual Configuration
+
+Add to your Claude Code MCP settings file (`~/.claude.json`)
 
 ```json
 {
@@ -66,7 +81,9 @@ Add to your Claude Code MCP settings:
 }
 ```
 
-**Option 2: VS Code with Claude Extension** (`.vscode/mcp.json`)
+#### Option 3: VS Code with Claude Extension
+
+Add to `.vscode/mcp.json`
 
 ```json
 {
