@@ -1,31 +1,38 @@
 {
   "name": "gemini-mcp-server",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "MCP server for Google Gemini AI models",
   "type": "module",
-  "main": "build/index.js",
+  "main": "dist/index.js",
   "scripts": {
-    "build": "tsc",
-    "dev": "tsc && node build/index.js",
-    "watch": "tsc --watch"
+    "start": "node dist/index.js",
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc"
   },
   "keywords": [
     "mcp",
     "gemini",
     "ai",
-    "google"
+    "google",
+    "claude-code"
   ],
   "author": "",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/george7979/gemini-mcp-server.git"
+  },
   "dependencies": {
     "@google/genai": "^1.30.0",
     "@modelcontextprotocol/sdk": "^1.13.3",
-    "dotenv": "^16.4.5",
-    "zod": "^3.24.1",
-    "zod-to-json-schema": "^3.23.5"
+    "zod": "^3.24.1"
   },
   "devDependencies": {
-    "@types/node": "^20.17.16",
+    "@types/node": "^22.10.0",
+    "tsx": "^4.19.2",
     "typescript": "^5.8.2"
+  },
+  "engines": {
+    "node": ">=18"
   }
 }
