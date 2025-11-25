@@ -50,7 +50,7 @@ Existing solutions are either outdated, poorly documented, or not compliant with
 - [x] All 4 tools implemented with proper schemas and annotations
 - [x] README contains complete installation instructions
 - [x] Project installable on clean machine in <5 minutes
-- [ ] Published to GitHub as public repository
+- [x] Published to GitHub as public repository
 
 ## Out of Scope
 - npm package publication (considered for future)
