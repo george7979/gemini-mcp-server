@@ -25,7 +25,7 @@ While Claude excels at many tasks, Gemini offers unique capabilities:
 | `gemini_youtube` | YouTube video analysis (transcription, Q&A, summarization) |
 | `gemini_status` | Server status and configuration check |
 
-**Default Model:** `gemini-3-pro-preview` (configurable via `GEMINI_MODEL` env var)
+**Default Model:** `gemini-3-flash-preview` (configurable via `GEMINI_MODEL` env var)
 
 ## Quick Start
 
@@ -78,7 +78,7 @@ Add to your Claude Code MCP settings file (`~/.claude.json`)
       "args": ["/absolute/path/to/gemini-mcp-server/dist/index.js"],
       "env": {
         "GOOGLE_API_KEY": "your-api-key-here",
-        "GEMINI_MODEL": "gemini-3-pro-preview"  // optional - validated at startup
+        "GEMINI_MODEL": "gemini-3-flash-preview"  // optional - validated at startup
       }
     }
   }
@@ -98,7 +98,7 @@ Add to `.vscode/mcp.json`
       "args": ["${workspaceFolder}/path/to/gemini-mcp-server/dist/index.js"],
       "env": {
         "GOOGLE_API_KEY": "your-api-key-here",
-        "GEMINI_MODEL": "gemini-3-pro-preview"  // optional - validated at startup
+        "GEMINI_MODEL": "gemini-3-flash-preview"  // optional - validated at startup
       }
     }
   }
@@ -152,7 +152,7 @@ Generate text from a single prompt.
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `input` | string | Yes | The prompt or question |
-| `model` | string | No | Model to use (default: `gemini-3-pro-preview`) |
+| `model` | string | No | Model to use (default: `gemini-3-flash-preview`) |
 | `temperature` | number | No | Randomness 0-2 (default: 1) |
 | `max_tokens` | number | No | Maximum output length |
 | `top_p` | number | No | Nucleus sampling 0-1 |
@@ -165,7 +165,7 @@ Multi-turn conversation with message history.
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `messages` | array | Yes | Array of `{role, content}` objects |
-| `model` | string | No | Model to use (default: `gemini-3-pro-preview`) |
+| `model` | string | No | Model to use (default: `gemini-3-flash-preview`) |
 | `temperature` | number | No | Randomness 0-2 |
 | `max_tokens` | number | No | Maximum output length |
 
@@ -184,7 +184,7 @@ Web search with Google Search grounding.
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `input` | string | Yes | Search query |
-| `model` | string | No | Model to use (default: `gemini-3-pro-preview`) |
+| `model` | string | No | Model to use (default: `gemini-3-flash-preview`) |
 | `temperature` | number | No | Randomness 0-2 |
 | `max_tokens` | number | No | Maximum output length |
 
@@ -198,7 +198,7 @@ Analyze YouTube videos.
 |-----------|------|----------|-------------|
 | `youtube_url` | string | Yes | YouTube video URL |
 | `prompt` | string | Yes | Question or task about the video |
-| `model` | string | No | Model to use (default: `gemini-3-pro-preview`) |
+| `model` | string | No | Model to use (default: `gemini-3-flash-preview`) |
 | `start_offset` | string | No | Start time (e.g., "60s", "1m30s") |
 | `end_offset` | string | No | End time (e.g., "120s", "2m") |
 | `temperature` | number | No | Randomness 0-2 |
@@ -262,7 +262,7 @@ The free tier has usage limits. Wait a few minutes and try again, or upgrade you
 - Very long videos may hit token limits (use `start_offset`/`end_offset`)
 
 ### Model validation and fallback
-If you configure an invalid model via `GEMINI_MODEL`, the server automatically falls back to `gemini-3-pro-preview`. The warning is logged to stderr but may not be visible in Claude Code.
+If you configure an invalid model via `GEMINI_MODEL`, the server automatically falls back to `gemini-3-flash-preview`. The warning is logged to stderr but may not be visible in Claude Code.
 
 To check your current configuration status:
 1. Use the `gemini_status` tool - it shows active model and whether fallback occurred

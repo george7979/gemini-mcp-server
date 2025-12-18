@@ -78,7 +78,7 @@ src/index.ts:
 | `gemini_youtube` | YouTube video analysis |
 | `gemini_status` | Server status and config check |
 
-**Default Model:** `gemini-3-pro-preview` (configurable via `GEMINI_MODEL` env var)
+**Default Model:** `gemini-3-flash-preview` (configurable via `GEMINI_MODEL` env var)
 
 ## Dependencies
 
@@ -101,9 +101,9 @@ Edit `handleGeminiError()` function - maps API errors to actionable user message
 Set `GEMINI_MODEL` environment variable in your MCP client config (e.g., `.claude.json`).
 
 **Model Validation:** At startup, the server validates the configured model via `models.list()` API:
-- If `GEMINI_MODEL` not set → uses default `gemini-3-pro-preview` (no validation)
+- If `GEMINI_MODEL` not set → uses default `gemini-3-flash-preview` (no validation)
 - If model exists → uses it silently
-- If model doesn't exist → warning to stderr + fallback to `gemini-3-pro-preview`
+- If model doesn't exist → warning to stderr + fallback to `gemini-3-flash-preview`
 
 **Fallback model:** Hardcoded in `FALLBACK_MODEL` constant in `src/index.ts`.
 
